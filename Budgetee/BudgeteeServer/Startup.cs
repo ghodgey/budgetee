@@ -1,16 +1,27 @@
+using BudgeteeServer.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace BudgeteeServer
 {
     public class Startup
     {
-
-        public void ConfigureServices()
+        public Startup(IConfiguration configuration)
         {
+            Configuration = configuration;
+        }
 
+        public IConfiguration Configuration { get; }
+
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddConfig(Configuration);
+            services.AddAwsDynamoDb(Configuration);
+            services.AddControllers();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -19,16 +30,21 @@ namespace BudgeteeServer
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
-           {
-               endpoints.MapGet("/", async context =>
-               {
-                   await context.Response.WriteAsync("Hello World!");
-               });
-           });
+            {
+                endpoints.MapControllers();
+
+                endpoints.MapGet("/", async context =>
+                {
+                    await context.Response.WriteAsync("Welcome to the Budgetee API");
+                });
+            });
         }
     }
 }
