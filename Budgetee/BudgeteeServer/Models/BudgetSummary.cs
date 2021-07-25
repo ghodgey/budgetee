@@ -19,7 +19,7 @@ namespace BudgeteeServer.Models
         /// <summary>
         /// This is the index for the BudgetSummary
         /// </summary>
-        [DynamoDBProperty]
+        [DynamoDBGlobalSecondaryIndexHashKey("MonthYear-index")]
         public string MonthYear { get; set; }
 
         /// <summary>

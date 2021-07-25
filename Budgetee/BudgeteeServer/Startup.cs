@@ -1,4 +1,8 @@
+using BudgeteeServer.DataAccess.DAO;
 using BudgeteeServer.Extensions;
+using BudgeteeServer.GraphQL;
+using BudgeteeServer.GraphQL.Types;
+using GraphQL.Server.Ui.Voyager;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -22,6 +26,12 @@ namespace BudgeteeServer
             services.AddConfig(Configuration);
             services.AddAwsDynamoDb(Configuration);
             services.AddControllers();
+            services.AddScoped<IBudgetSummaryRepository, BudgetSummaryRepository>();
+            services.AddGraphQLServer()
+                .AddQueryType<Query>()
+                .AddType<BudgetSummaryType>()
+                .AddFiltering()
+                .AddSorting();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -38,6 +48,7 @@ namespace BudgeteeServer
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapGraphQL();
                 endpoints.MapControllers();
 
                 endpoints.MapGet("/", async context =>
@@ -45,6 +56,11 @@ namespace BudgeteeServer
                     await context.Response.WriteAsync("Welcome to the Budgetee API");
                 });
             });
+
+            app.UseGraphQLVoyager(new VoyagerOptions()
+            {
+                GraphQLEndPoint = "/graphql"
+            }, "/graphql-voyager");
         }
     }
 }

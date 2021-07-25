@@ -1,5 +1,4 @@
-﻿using Amazon.DynamoDBv2.DataModel;
-using BudgeteeServer.Models;
+﻿using BudgeteeServer.DataAccess.DAO;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -9,10 +8,28 @@ namespace BudgeteeServer.Controllers
     [Route("[controller]")]
     public class BudgeteeController : ControllerBase
     {
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> Index([FromRoute] int id, [FromServices] IDynamoDBContext dynamoDbContext)
+        private readonly IBudgetSummaryRepository _budgetSummaryRepository;
+        public BudgeteeController(IBudgetSummaryRepository budgetSummaryRepository)
         {
-            return Ok(await dynamoDbContext.QueryAsync<BudgetSummary>(id).GetRemainingAsync());
+            _budgetSummaryRepository = budgetSummaryRepository;
+        }
+        [HttpGet("{monthYear}")]
+        public async Task<IActionResult> Index([FromRoute] string monthYear)
+        {
+            var budgetSummary = await _budgetSummaryRepository.GetBudgetSummaryByMonthYearAsync(monthYear);
+
+            budgetSummary.BudgetItems.Add(new Models.BudgetItem
+            {
+                BudgetType = 0,
+                Description = "This is a test",
+                Id = 3,
+                Name = Models.Enums.Name.Gazza,
+                Price = 23.99f
+            });
+
+            await _budgetSummaryRepository.SaveBudgetSummaryAsync(budgetSummary);
+
+            return Ok(await _budgetSummaryRepository.GetBudgetSummaryByMonthYearAsync(monthYear));
         }
     }
 }
