@@ -7,19 +7,12 @@ namespace BudgeteeServer.Models
     /// This class is used to capture the entire summary of the budget
     /// </summary>
 
-    [DynamoDBTable("Budgetee")]
     public class BudgetSummary
     {
         /// <summary>
-        /// Unique identifier for the budget summary
-        /// </summary>
-        [DynamoDBHashKey]
-        public int Id { get; set; }
-
-        /// <summary>
         /// This is the index for the BudgetSummary
         /// </summary>
-        [DynamoDBGlobalSecondaryIndexHashKey("MonthYear-index")]
+        [DynamoDBHashKey]
         public string MonthYear { get; set; }
 
         /// <summary>

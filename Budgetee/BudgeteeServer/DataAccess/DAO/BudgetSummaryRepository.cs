@@ -10,7 +10,6 @@ namespace BudgeteeServer.DataAccess.DAO
     public class BudgetSummaryRepository : IBudgetSummaryRepository
     {
         private readonly IDynamoDBContext _dynamoDbContext;
-        private readonly string MONTH_YEAR_INDEX = "MonthYear";
 
         public BudgetSummaryRepository(IDynamoDBContext dynamoDbContext)
         {
@@ -21,30 +20,14 @@ namespace BudgeteeServer.DataAccess.DAO
         {
             var scanConds = new List<ScanCondition>
             {
-                new ScanCondition(nameof(BudgetSummary.Id), ScanOperator.GreaterThan, 0)
+                new ScanCondition(nameof(BudgetSummary.MonthYear), ScanOperator.GreaterThan, 0)
             };
             var result = (await _dynamoDbContext.ScanAsync<BudgetSummary>(scanConds).GetRemainingAsync()).AsQueryable();
-
             return result;
         }
 
-
-        public async Task<BudgetSummary> GetBudgetSummaryByMonthYearAsync(string monthYear)
-        {
-            var query = new QueryOperationConfig
-            {
-                IndexName = "MonthYear-index",
-                Filter = new QueryFilter(MONTH_YEAR_INDEX, QueryOperator.Equal, monthYear),
-                Limit = 1
-            };
-
-            var result = await _dynamoDbContext
-            .FromQueryAsync<BudgetSummary>(query).GetRemainingAsync();
-
-            return result.Count > 0 ? result[0] : null;
-        }
+        public async Task<BudgetSummary> GetBudgetSummaryByMonthYearAsync(string monthYear) => (await _dynamoDbContext.QueryAsync<BudgetSummary>(monthYear).GetRemainingAsync()).FirstOrDefault();
 
         public async Task SaveBudgetSummaryAsync(BudgetSummary budgetSummary) => await _dynamoDbContext.SaveAsync(budgetSummary);
-
     }
 }

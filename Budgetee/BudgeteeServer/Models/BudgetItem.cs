@@ -4,7 +4,6 @@ namespace BudgeteeServer.Models
 {
     public class BudgetItem
     {
-        public int Id { get; set; }
         public Name Name { get; set; }
         public BudgetType BudgetType { get; set; }
         public float Price { get; set; }

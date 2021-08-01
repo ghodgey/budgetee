@@ -30,6 +30,7 @@ namespace BudgeteeServer
             services.AddGraphQLServer()
                 .AddQueryType<Query>()
                 .AddType<BudgetSummaryType>()
+                .AddMutationType<Mutation>()
                 .AddFiltering()
                 .AddSorting();
         }

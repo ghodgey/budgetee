@@ -22,7 +22,6 @@ namespace BudgeteeServer.Controllers
             {
                 BudgetType = 0,
                 Description = "This is a test",
-                Id = 3,
                 Name = Models.Enums.Name.Gazza,
                 Price = 23.99f
             });

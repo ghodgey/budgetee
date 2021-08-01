@@ -12,13 +12,11 @@ namespace BudgeteeServer.GraphQL
         [UseFiltering]
         [UseSorting]
         public async Task<IQueryable<BudgetSummary>> GetAllBudgetSummaries([Service] IBudgetSummaryRepository repository)
-        {
-            return await repository.GetBudgetSummaries();
-        }
+            => await repository.GetBudgetSummaries();
+
 
         public async Task<BudgetSummary> GetBudgetSummaryByMonthYearAsync([Service] IBudgetSummaryRepository repository, string monthYear)
-        {
-            return await repository.GetBudgetSummaryByMonthYearAsync(monthYear);
-        }
+            => await repository.GetBudgetSummaryByMonthYearAsync(monthYear);
+
     }
 }
