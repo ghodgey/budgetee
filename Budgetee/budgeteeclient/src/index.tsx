@@ -1,8 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+
+//Here we can add routing
+function App() {
+  return <p className="text-sm font-bold">Testing this stuff</p>;
+}
 
 ReactDOM.render(
   <React.StrictMode>
