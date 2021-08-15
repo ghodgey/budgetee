@@ -12,6 +12,7 @@ namespace BudgeteeServer.GraphQL
             var budgetSummary = new BudgetSummary
             {
                 MonthYear = input.BudgetSummary.MonthYear,
+                DateCreated = input.BudgetSummary.DateCreated,
                 Month = input.BudgetSummary.Month,
                 Year = input.BudgetSummary.Year,
                 BudgetItems = input.BudgetSummary.BudgetItems

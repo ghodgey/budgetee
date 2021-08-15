@@ -2,15 +2,21 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
+import { BudgetSummary } from "./pages/budgetSummary";
+import { createClient, Provider } from "urql";
+import { SimpleLayout } from "./layout";
 
-//Here we can add routing
-function App() {
-  return <p className="text-sm font-bold">Testing this stuff</p>;
-}
+const client = createClient({
+  url: "https://localhost:5001/graphql",
+});
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider value={client}>
+      <SimpleLayout>
+        <BudgetSummary />
+      </SimpleLayout>
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );

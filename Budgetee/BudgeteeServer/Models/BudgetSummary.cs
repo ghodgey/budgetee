@@ -16,6 +16,12 @@ namespace BudgeteeServer.Models
         public string MonthYear { get; set; }
 
         /// <summary>
+        /// Range key used to sort queries and when the budget summary was initially created
+        /// </summary>
+        [DynamoDBRangeKey]
+        public string DateCreated { get; set; }
+
+        /// <summary>
         /// Month of the budget summary
         /// </summary>
         [DynamoDBProperty]

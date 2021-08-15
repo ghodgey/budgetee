@@ -21,8 +21,16 @@ namespace BudgeteeServer
 
         public IConfiguration Configuration { get; }
 
+        private const string corsPolicyName = "AllowAnyPolicy";
+
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(o => o.AddPolicy(corsPolicyName, builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
             services.AddConfig(Configuration);
             services.AddAwsDynamoDb(Configuration);
             services.AddControllers();
@@ -41,6 +49,8 @@ namespace BudgeteeServer
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseCors(corsPolicyName);
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
